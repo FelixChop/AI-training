@@ -1,0 +1,1373 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<title>Formation IA pour la productivité — Felix Revert</title>
+<meta name="description" content="Formation IA générative par Felix Revert (ex-Doctolib, Betclic, Le Wagon). Il y a trois ans, l'IA était un chatbot. Maintenant, c'est le logiciel de pilotage de votre productivité." />
+<meta name="author" content="Felix Revert" />
+<link rel="canonical" href="https://felixrevert.com/" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Formation IA pour la productivité — Felix Revert" />
+<meta property="og:description" content="Il y a trois ans, c'était un chatbot. Maintenant, c'est le logiciel de pilotage de votre productivité." />
+<meta property="og:locale" content="fr_FR" />
+
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Person","name":"Felix Revert","alternateName":"FelixChop","jobTitle":"Formateur IA générative, Data Scientist & Product Manager","description":"Felix Revert forme professionnels et dirigeants à utiliser Claude comme véritable poste de travail. 9 ans d'expérience en data science et product management — Doctolib, Betclic, Le Wagon.","url":"https://felixrevert.com/","email":"felixrevert@gmail.com","sameAs":["https://github.com/FelixChop","https://www.linkedin.com/in/felix-revert-00998852/"],"knowsAbout":["Claude AI","Generative AI","MCP","Machine Learning","Product Management"],"alumniOf":["ENSAE ParisTech","Humboldt-Universität zu Berlin"]}
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400..800;1,6..72,400..800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+<style>
+:root {
+  --bg: #FAF4EA;
+  --bg-alt: #F1E8D4;
+  --paper: #FFFCF5;
+  --ink: #0E1240;
+  --ink-soft: #4A5180;
+  --ink-mute: #8088B5;
+  --royal: #2D45D1;
+  --pink: #FF4D8F;
+  --pink-soft: #FFD2DF;
+  --line: rgba(14, 18, 64, 0.1);
+  --line-soft: rgba(14, 18, 64, 0.05);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  font-size: 17px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+body::before {
+  content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 1000;
+  opacity: 0.25;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.05 0 0 0 0 0.07 0 0 0 0 0.25 0 0 0 0.12 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  mix-blend-mode: multiply;
+}
+
+h1, h2, h3 {
+  font-family: 'Newsreader', Georgia, serif;
+  font-weight: 500;
+  letter-spacing: -0.022em;
+  line-height: 1.05;
+  font-variation-settings: "opsz" 72;
+}
+a { color: inherit; text-decoration: none; }
+
+/* ============ HERO ============ */
+.hero {
+  min-height: 92vh;
+  padding: 120px 36px 80px;
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.hero h1 {
+  font-size: clamp(48px, 9vw, 132px);
+  font-weight: 600;
+  margin-bottom: 44px;
+  max-width: 14ch;
+  line-height: 0.96;
+}
+.hero h1 em { font-style: italic; color: var(--royal); font-weight: 500; }
+
+.hero .lede {
+  font-family: 'Newsreader', serif;
+  font-size: clamp(20px, 2.4vw, 30px);
+  font-weight: 500;
+  font-style: italic;
+  letter-spacing: -0.01em;
+  max-width: 26ch;
+  color: var(--ink);
+  line-height: 1.3;
+}
+.hero .lede .underline {
+  background: linear-gradient(180deg, transparent 70%, var(--pink-soft) 70%);
+  padding: 0 3px;
+}
+.hero .lede strong {
+  color: var(--ink); font-weight: 500; font-style: normal;
+  font-family: 'Inter', sans-serif; font-size: 0.78em;
+  letter-spacing: 0.02em;
+}
+
+@media (max-width: 720px) {
+  .hero { padding: 80px 22px 60px; min-height: 85vh; }
+}
+
+/* ============ SCROLL DEMO ============ */
+.demo {
+  background: var(--ink);
+  color: var(--paper);
+  padding: 130px 0 130px;
+  position: relative;
+  overflow: clip;
+}
+.demo::before {
+  content: '';
+  position: absolute;
+  top: 8%; left: -15%;
+  width: 55%; height: 55%;
+  background: radial-gradient(circle, var(--royal) 0%, transparent 60%);
+  opacity: 0.28;
+  filter: blur(90px);
+  pointer-events: none;
+}
+.demo::after {
+  content: '';
+  position: absolute;
+  bottom: 8%; right: -15%;
+  width: 55%; height: 55%;
+  background: radial-gradient(circle, var(--pink) 0%, transparent 60%);
+  opacity: 0.18;
+  filter: blur(90px);
+  pointer-events: none;
+}
+
+.demo h2 {
+  max-width: 1200px;
+  margin: 0 auto 80px;
+  padding: 0 36px;
+  font-size: clamp(34px, 5vw, 64px);
+  font-weight: 500;
+  max-width: 20ch;
+  position: relative; z-index: 1;
+}
+.demo h2 em { color: var(--pink); font-style: italic; }
+
+/* —— Hero picker —— */
+.hero-picker {
+  margin-top: 64px;
+}
+.picker-label {
+  font-family: 'Newsreader', serif;
+  font-size: clamp(16px, 1.6vw, 19px);
+  font-style: italic;
+  letter-spacing: -0.01em;
+  color: var(--ink-soft);
+  margin-bottom: 20px;
+}
+
+/* —— Tool picker —— */
+.tool-picker {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.tool-pill {
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  letter-spacing: -0.005em;
+  padding: 10px 20px;
+  background: transparent;
+  color: var(--ink-soft);
+  border: 1px solid var(--line);
+  border-radius: 100px;
+  cursor: pointer;
+  transition: all .25s cubic-bezier(.2,.8,.2,1);
+  font-weight: 500;
+}
+.tool-pill:hover {
+  color: var(--ink);
+  border-color: var(--ink);
+  transform: translateY(-1px);
+}
+.tool-pill.active {
+  background: var(--pink);
+  border-color: var(--pink);
+  color: white;
+  font-weight: 500;
+}
+.tool-pill.active:hover { transform: none; }
+
+@media (max-width: 720px) {
+  .hero-picker { margin-top: 44px; }
+  .tool-pill { padding: 8px 16px; font-size: 13px; }
+}
+
+/* Hide demo and next-step until tool is chosen */
+.demo.hidden, .next-step.hidden { display: none; }
+
+.demo-stage {
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 0 36px;
+  display: grid;
+  grid-template-columns: minmax(380px, 480px) 1fr;
+  gap: 100px;
+  position: relative;
+  z-index: 1;
+  align-items: start;
+}
+
+/* —— Claude sticky panel —— */
+.cl-panel {
+  position: sticky;
+  top: 8vh;
+  height: 80vh;
+  max-height: 700px;
+  background: #050720;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 22px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 40px 100px rgba(0,0,0,0.5);
+  z-index: 10;
+  isolation: isolate;
+}
+.cl-header {
+  padding: 14px 18px;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+  display: flex; align-items: center; gap: 12px;
+  background: rgba(0,0,0,0.2);
+}
+.cl-logo {
+  width: 26px; height: 26px;
+  background: linear-gradient(135deg, var(--royal) 0%, var(--pink) 100%);
+  border-radius: 7px;
+  display: grid; place-items: center;
+  font-family: 'Newsreader', serif;
+  font-weight: 600; font-style: italic; font-size: 14px;
+  color: white;
+}
+.cl-title { font-size: 13px; color: var(--paper); font-weight: 500; }
+.cl-sub { font-size: 11px; color: var(--ink-mute); }
+
+.cl-body {
+  flex: 1;
+  padding: 18px;
+  display: flex; flex-direction: column;
+  gap: 10px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,255,255,0.1) transparent;
+}
+.cl-body::-webkit-scrollbar { width: 4px; }
+.cl-body::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 4px; }
+
+.msg {
+  font-size: 13.5px; line-height: 1.5;
+  opacity: 0; transform: translateY(8px);
+  transition: opacity .45s ease, transform .45s ease;
+}
+.msg.visible { opacity: 1; transform: translateY(0); }
+
+.msg.user {
+  align-self: flex-end;
+  background: var(--royal);
+  color: white;
+  padding: 11px 15px;
+  border-radius: 16px;
+  border-bottom-right-radius: 5px;
+  max-width: 90%;
+}
+.msg.claude {
+  align-self: flex-start;
+  color: rgba(255, 255, 255, 0.92);
+  padding: 2px 0;
+  max-width: 95%;
+}
+.msg.claude::before {
+  content: '◇';
+  color: var(--pink);
+  margin-right: 8px;
+  font-size: 11px;
+  position: relative; top: -2px;
+}
+.msg.tool {
+  align-self: flex-start;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11.5px;
+  color: var(--pink-soft);
+  background: rgba(255, 77, 143, 0.08);
+  border: 1px solid rgba(255, 77, 143, 0.18);
+  border-radius: 6px;
+  padding: 7px 11px;
+  max-width: 95%;
+  letter-spacing: -0.01em;
+  word-break: break-word;
+}
+.msg.tool .fn { color: #F5DC73; }
+.msg.tool .arg { color: rgba(255, 210, 223, 0.7); }
+.msg.tool-result {
+  align-self: flex-start;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11.5px;
+  color: rgba(184, 224, 204, 0.85);
+  padding: 2px 11px 2px 22px;
+  position: relative;
+}
+.msg.tool-result::before {
+  content: '✓';
+  position: absolute; left: 8px; top: 2px;
+  color: #B8E0CC;
+}
+
+.cl-input {
+  border-top: 1px solid rgba(255,255,255,0.08);
+  padding: 12px 16px;
+  display: flex; align-items: center; gap: 10px;
+  font-size: 13px; color: var(--ink-mute);
+  background: rgba(0,0,0,0.2);
+}
+.cl-input .cursor {
+  width: 2px; height: 13px; background: var(--pink);
+  animation: blink 1s infinite;
+}
+@keyframes blink { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
+
+/* —— Captions —— */
+.captions { display: flex; flex-direction: column; }
+.caption {
+  min-height: 85vh;
+  padding: 30px 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  opacity: 0.22;
+  transition: opacity .5s ease;
+  max-width: 42ch;
+}
+.caption.active { opacity: 1; }
+.caption h3 {
+  font-size: clamp(28px, 3.4vw, 44px);
+  font-weight: 500;
+  margin-bottom: 18px;
+  color: var(--paper);
+}
+.caption h3 em { color: var(--pink); font-style: italic; }
+.caption p {
+  color: rgba(255, 252, 245, 0.65);
+  font-size: 16px;
+  line-height: 1.55;
+}
+
+@media (max-width: 980px) {
+  .demo-stage {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  .cl-panel {
+    top: 12px;
+    height: 52vh;
+    max-height: 440px;
+  }
+  .caption { min-height: 55vh; padding: 24px 0; }
+}
+
+/* ============ NEXT STEP ============ */
+.next-step {
+  padding: 140px 36px 70px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.next-step h2 {
+  font-size: clamp(40px, 6vw, 80px);
+  font-weight: 500;
+  margin-bottom: 90px;
+}
+.next-step h2 em { font-style: italic; color: var(--royal); }
+
+.steps-list {
+  list-style: none;
+  margin: 0 0 120px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 64px 70px;
+}
+.step-item {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 24px;
+  align-items: start;
+}
+.step-num {
+  font-family: 'Newsreader', serif;
+  font-style: italic;
+  font-size: clamp(40px, 4.5vw, 60px);
+  font-weight: 500;
+  color: var(--pink);
+  line-height: 0.85;
+  letter-spacing: -0.03em;
+}
+.step-item h3 {
+  font-family: 'Newsreader', serif;
+  font-size: clamp(22px, 2.4vw, 30px);
+  font-weight: 500;
+  letter-spacing: -0.015em;
+  line-height: 1.18;
+  margin-bottom: 10px;
+}
+.step-item h3 em { font-style: italic; color: var(--royal); }
+.step-item p {
+  font-size: 15.5px;
+  color: var(--ink-soft);
+  line-height: 1.5;
+}
+
+.closing-quote {
+  font-family: 'Newsreader', serif;
+  font-size: clamp(28px, 4.2vw, 52px);
+  font-weight: 500;
+  font-style: italic;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  text-align: center;
+  max-width: 28ch;
+  margin: 0 auto;
+  padding-top: 90px;
+  border-top: 1px solid var(--line);
+}
+.closing-quote em {
+  font-style: italic;
+  color: var(--royal);
+  font-weight: 500;
+}
+.closing-quote .pink-em { color: var(--pink); }
+
+@media (max-width: 900px) {
+  .next-step { padding: 80px 22px; }
+  .steps-list { grid-template-columns: 1fr; gap: 40px; margin-bottom: 80px; }
+  .closing-quote { padding-top: 60px; max-width: 22ch; }
+}
+
+/* ============ FORMATEUR ============ */
+.formateur {
+  padding: 140px 36px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.formateur h2 {
+  font-size: clamp(40px, 6vw, 80px);
+  font-weight: 500;
+  margin-bottom: 90px;
+}
+.formateur h2 em { font-style: italic; color: var(--royal); }
+
+.intro-grid {
+  display: grid;
+  grid-template-columns: 0.8fr 1fr;
+  gap: 80px;
+  align-items: start;
+  margin-bottom: 130px;
+}
+
+/* Photo */
+.photo {
+  position: relative;
+  aspect-ratio: 4/5;
+  background: var(--bg-alt);
+  border-radius: 6px;
+  overflow: hidden;
+}
+.photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.intro-text h3 {
+  font-family: 'Newsreader', serif;
+  font-size: clamp(28px, 3.6vw, 44px);
+  font-weight: 500;
+  font-style: italic;
+  letter-spacing: -0.015em;
+  line-height: 1.15;
+  margin-bottom: 32px;
+}
+.intro-text h3 em { color: var(--royal); font-style: italic; }
+.intro-text p {
+  font-size: 17px;
+  color: var(--ink-soft);
+  margin-bottom: 16px;
+  line-height: 1.65;
+}
+.intro-text p strong { color: var(--ink); font-weight: 500; }
+
+.cv-link {
+  margin-top: 40px;
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 26px;
+  border: 1px solid var(--ink);
+  border-radius: 100px;
+  font-family: 'Inter', sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--ink);
+  transition: all .25s cubic-bezier(.2,.8,.2,1);
+}
+.cv-link:hover {
+  background: var(--ink);
+  color: var(--paper);
+  transform: translateY(-1px);
+}
+.cv-link .cv-arrow {
+  transition: transform .25s;
+  color: var(--pink);
+}
+.cv-link:hover .cv-arrow {
+  transform: translateX(4px);
+  color: var(--paper);
+}
+
+@media (max-width: 900px) {
+  .formateur { padding: 80px 22px; }
+  .intro-grid { grid-template-columns: 1fr; gap: 40px; margin-bottom: 90px; }
+}
+
+/* —— Logos marquee —— */
+.marquee {
+  margin: 0 calc(50% - 50vw) 90px;
+  padding: 36px 0;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  overflow: hidden;
+  position: relative;
+  mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+}
+.marquee-track {
+  display: flex;
+  align-items: center;
+  gap: 60px;
+  width: max-content;
+  animation: scroll-x 60s linear infinite;
+}
+@keyframes scroll-x {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.marquee:hover .marquee-track {
+  animation-play-state: paused;
+}
+.logo-item {
+  font-family: 'Newsreader', serif;
+  font-size: clamp(22px, 2.2vw, 30px);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  opacity: 0.55;
+  white-space: nowrap;
+  transition: opacity .3s;
+}
+.logo-item:hover { opacity: 1; }
+.logo-item.italic { font-style: italic; }
+
+@media (max-width: 720px) {
+  .marquee { margin: 0 calc(50% - 50vw) 60px; padding: 28px 0; }
+  .marquee-track { gap: 40px; }
+}
+
+/* —— Testimonials carousel —— */
+.carousel { position: relative; margin-top: 110px; }
+.carousel-viewport {
+  overflow: hidden;
+  border-radius: 14px;
+}
+.carousel-track {
+  display: flex;
+  transition: transform .55s cubic-bezier(.2,.8,.2,1);
+  align-items: stretch;
+}
+.testimonial {
+  flex: 0 0 100%;
+  min-width: 100%;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 56px 64px;
+  position: relative;
+  overflow: hidden;
+}
+.testimonial::before {
+  content: '"';
+  position: absolute;
+  top: -28px; left: 28px;
+  font-family: 'Newsreader', serif;
+  font-size: 180px;
+  font-style: italic;
+  color: var(--pink-soft);
+  line-height: 1;
+  font-weight: 500;
+  pointer-events: none;
+}
+.testimonial p {
+  font-family: 'Newsreader', serif;
+  font-size: clamp(20px, 2.3vw, 28px);
+  font-weight: 500;
+  line-height: 1.3;
+  letter-spacing: -0.015em;
+  margin-bottom: 36px;
+  position: relative;
+  max-width: 38ch;
+}
+.author {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding-top: 22px;
+  border-top: 1px solid var(--line);
+  position: relative;
+}
+.author-avatar {
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--royal), var(--pink));
+  flex-shrink: 0;
+  display: grid; place-items: center;
+  font-family: 'Newsreader', serif;
+  font-style: italic;
+  font-weight: 500;
+  font-size: 16px;
+  color: white;
+}
+.author-text { font-size: 14px; line-height: 1.35; }
+.author-text .name { font-weight: 500; color: var(--ink); }
+.author-text .meta { color: var(--ink-mute); }
+
+.carousel-nav {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 28px;
+  margin-top: 28px;
+}
+.carousel-arrow {
+  width: 38px; height: 38px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  background: transparent;
+  cursor: pointer;
+  font-size: 15px;
+  color: var(--ink-soft);
+  transition: all .25s;
+  display: grid;
+  place-items: center;
+  font-family: inherit;
+  padding: 0;
+}
+.carousel-arrow:hover {
+  background: var(--ink);
+  color: var(--paper);
+  border-color: var(--ink);
+}
+.carousel-dots {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.dot {
+  width: 8px; height: 8px;
+  padding: 0;
+  border-radius: 50%;
+  border: none;
+  background: var(--line);
+  cursor: pointer;
+  transition: all .3s;
+}
+.dot.active {
+  background: var(--pink);
+  width: 26px;
+  border-radius: 4px;
+}
+
+@media (max-width: 900px) {
+  .testimonial { padding: 40px 32px; }
+  .testimonial::before { font-size: 130px; top: -22px; left: 18px; }
+}
+
+/* ============ OFFRE ============ */
+.offre {
+  background: var(--paper);
+  padding: 70px 36px 140px;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+.offre-inner { max-width: 1100px; margin: 0 auto; }
+.offre h2 {
+  font-size: clamp(40px, 6vw, 80px);
+  font-weight: 500;
+  margin-bottom: 80px;
+}
+.offre h2 em { font-style: italic; color: var(--royal); }
+
+.offers-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+
+.offer {
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 44px 38px;
+  position: relative;
+  overflow: hidden;
+  transition: border-color .3s;
+}
+.offer:hover { border-color: var(--royal); }
+.offer.dark {
+  background: var(--ink);
+  color: var(--paper);
+  border-color: var(--ink);
+}
+.offer.dark:hover { border-color: var(--pink); }
+
+.offer h3 {
+  font-size: clamp(32px, 3.4vw, 44px);
+  font-weight: 500;
+  margin-bottom: 10px;
+}
+.offer h3 em { font-style: italic; color: var(--royal); }
+.offer.dark h3 em { color: var(--pink); }
+
+.offer-meta {
+  font-size: 13px; color: var(--ink-mute);
+  margin-bottom: 28px;
+  font-family: 'JetBrains Mono', monospace;
+}
+.offer.dark .offer-meta { color: rgba(255, 252, 245, 0.55); }
+
+.offer-desc {
+  font-size: 16px; color: var(--ink-soft);
+  margin-bottom: 30px;
+  line-height: 1.55;
+}
+.offer.dark .offer-desc { color: rgba(255, 252, 245, 0.7); }
+.offer-desc strong { color: var(--ink); font-weight: 500; }
+.offer.dark .offer-desc strong { color: var(--paper); }
+
+.offer-list { list-style: none; }
+.offer-list li {
+  font-size: 14.5px;
+  padding: 12px 0 12px 22px;
+  position: relative;
+  border-bottom: 1px solid var(--line-soft);
+  line-height: 1.4;
+}
+.offer.dark .offer-list li {
+  color: rgba(255, 252, 245, 0.88);
+  border-color: rgba(255, 252, 245, 0.08);
+}
+.offer-list li::before {
+  content: '→'; position: absolute; left: 0;
+  color: var(--royal); font-weight: 500;
+}
+.offer.dark .offer-list li::before { color: var(--pink); }
+.offer-list li:last-child { border-bottom: none; }
+
+.offer-price {
+  margin-top: 30px;
+  padding-top: 24px;
+  border-top: 1px solid var(--line);
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+}
+.offer.dark .offer-price { border-top-color: rgba(255, 252, 245, 0.12); }
+.price-amount {
+  font-family: 'Newsreader', serif;
+  font-size: clamp(36px, 4vw, 52px);
+  font-weight: 500;
+  letter-spacing: -0.025em;
+  color: var(--ink);
+  line-height: 1;
+}
+.offer.dark .price-amount { color: var(--paper); }
+.price-unit {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+}
+.offer.dark .price-unit { color: rgba(255, 252, 245, 0.5); }
+
+@media (max-width: 900px) {
+  .offre { padding: 90px 22px; }
+  .offers-grid { grid-template-columns: 1fr; gap: 18px; }
+  .offer { padding: 36px 30px; }
+}
+
+/* ============ FINAL ============ */
+.final {
+  background: var(--ink);
+  color: var(--paper);
+  padding: 140px 36px;
+  position: relative;
+  overflow: hidden;
+}
+.final::before {
+  content: ''; position: absolute;
+  top: -100px; left: 15%;
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, var(--royal) 0%, transparent 60%);
+  opacity: 0.32; filter: blur(70px); pointer-events: none;
+}
+.final::after {
+  content: ''; position: absolute;
+  bottom: -100px; right: 15%;
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, var(--pink) 0%, transparent 60%);
+  opacity: 0.22; filter: blur(70px); pointer-events: none;
+}
+
+.final-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+.final h2 {
+  font-size: clamp(36px, 6vw, 88px);
+  font-weight: 500;
+  max-width: 18ch;
+  margin-bottom: 80px;
+  line-height: 1.04;
+}
+.final h2 em { font-style: italic; color: var(--pink); }
+
+.cta-single {
+  display: flex;
+  justify-content: center;
+}
+.cta-card {
+  padding: 48px 44px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 252, 245, 0.12);
+  border-radius: 18px;
+  text-decoration: none;
+  color: var(--paper);
+  transition: all .3s cubic-bezier(.2,.8,.2,1);
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  max-width: 560px;
+  width: 100%;
+}
+.cta-card:hover {
+  background: rgba(255, 77, 143, 0.1);
+  border-color: var(--pink);
+  transform: translateY(-2px);
+}
+.cta-pill {
+  display: inline-flex;
+  align-self: flex-start;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 14px;
+  background: var(--pink);
+  color: white;
+  border-radius: 100px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+}
+.cta-card h3 {
+  font-size: clamp(28px, 3.2vw, 42px);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  margin-top: 4px;
+}
+.cta-card h3 em { font-style: italic; color: var(--pink); }
+.cta-sub {
+  font-family: 'Newsreader', serif;
+  font-style: italic;
+  font-size: clamp(15px, 1.4vw, 17px);
+  color: rgba(255, 252, 245, 0.7);
+  line-height: 1.45;
+}
+.cta-card .cta-value {
+  font-family: 'Inter', sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--paper);
+  margin-top: 8px;
+  padding-top: 22px;
+  border-top: 1px solid rgba(255, 252, 245, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.cta-card .arrow {
+  color: var(--pink);
+  transition: transform .25s;
+  font-size: 18px;
+}
+.cta-card:hover .arrow { transform: translateX(4px); }
+
+@media (max-width: 720px) {
+  .final { padding: 100px 22px; }
+  .cta-card { padding: 36px 30px; }
+}
+
+/* ============ FOOTER ============ */
+footer {
+  background: var(--ink);
+  color: rgba(255, 252, 245, 0.4);
+  padding: 30px 36px;
+  font-size: 12px;
+  border-top: 1px solid rgba(255, 252, 245, 0.08);
+}
+.foot-inner {
+  max-width: 1300px; margin: 0 auto;
+  display: flex; justify-content: space-between;
+  flex-wrap: wrap; gap: 16px;
+}
+footer a { color: rgba(255, 252, 245, 0.6); margin-right: 22px; }
+footer a:hover { color: var(--pink); }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<header class="hero">
+  <h1>Formation IA<br />pour la <em>productivité.</em></h1>
+  <p class="lede">
+    Il y a trois ans, c'était un chatbot. Maintenant, c'est le <span class="underline">logiciel de pilotage</span> de votre productivité.
+  </p>
+
+  <div class="hero-picker">
+    <p class="picker-label">Quel outil IA utilisez-vous ?</p>
+    <div class="tool-picker">
+      <button class="tool-pill" data-tool="Claude" data-letter="C">Claude</button>
+      <button class="tool-pill" data-tool="ChatGPT" data-letter="G">ChatGPT</button>
+      <button class="tool-pill" data-tool="Gemini" data-letter="G">Gemini</button>
+      <button class="tool-pill" data-tool="Cursor" data-letter="C">Cursor</button>
+      <button class="tool-pill" data-tool="Windsurf" data-letter="W">Windsurf</button>
+      <button class="tool-pill" data-tool="Copilot" data-letter="C">Copilot</button>
+    </div>
+  </div>
+</header>
+
+<!-- SCROLL DEMO (revealed on tool pick) -->
+<section class="demo hidden" id="demo">
+
+  <h2><span class="tool-name-inline" id="tool-name">Claude</span>, <em>le premier outil à ouvrir</em> en allumant l'ordinateur.</h2>
+
+  <div class="demo-stage">
+
+    <!-- STICKY CLAUDE -->
+    <div class="cl-panel">
+      <div class="cl-header">
+        <div class="cl-logo">C</div>
+        <div><div class="cl-title">Claude<span class="cl-sub"> · Espace de travail</span></div></div>
+      </div>
+      <div class="cl-body" id="cl-body"></div>
+      <div class="cl-input">
+        <span class="cursor"></span>
+        <span id="cl-prompt">Demande à Claude…</span>
+      </div>
+    </div>
+
+    <!-- CAPTIONS -->
+    <div class="captions">
+
+      <div class="caption" data-step="0" data-msgs='[{"type":"user","text":"Fais ma todo basée sur le dernier mois d|e-mails, de messages Teams et de mon agenda. Priorise par importance et urgence."}]'>
+        <h3>Une demande, <em>en langage naturel.</em></h3>
+        <p>Votre todo, vos priorités, le planning de votre semaine — formulés comme à un collègue.</p>
+      </div>
+
+      <div class="caption" data-step="1" data-msgs='[{"type":"claude","text":"Je récupère vos mails depuis 1 mois."},{"type":"tool","text":"Outlook_MCP.get_emails(range=\"30d\")"},{"type":"tool-result","text":"459 mails · 87 expéditeurs"}]'>
+        <h3>Connectez votre <em>boîte mail.</em></h3>
+        <p>Laissez <span class="tool-name-inline">Claude</span> lire vos messages — c'est sa spécialité.</p>
+      </div>
+
+      <div class="caption" data-step="2" data-msgs='[{"type":"claude","text":"Je récupère vos messages Teams depuis 1 mois."},{"type":"tool","text":"Teams_MCP.get_messages(range=\"30d\")"},{"type":"tool-result","text":"1 287 messages · 23 canaux"}]'>
+        <h3>Branchez <em>Teams et Slack.</em></h3>
+        <p><span class="tool-name-inline">Claude</span> suit tous vos canaux. Y compris ceux que vous avez pu oublier.</p>
+      </div>
+
+      <div class="caption" data-step="3" data-msgs='[{"type":"claude","text":"Je récupère votre agenda du dernier mois."},{"type":"tool","text":"Calendar_MCP.get_events(range=\"30d\")"},{"type":"tool-result","text":"87 réunions · 6 décisions extraites"}]'>
+        <h3>Donnez accès à votre <em>agenda.</em></h3>
+        <p>Vos meetings cessent d'être un cimetière. Ils deviennent du contexte exploitable.</p>
+      </div>
+
+      <div class="caption" data-step="4" data-msgs='[{"type":"claude","text":"Voici les 2 éléments les plus urgents à traiter : répondre à Jacques sur le deal Airbus, et préparer votre rendez-vous client avec Safran demain."}]'>
+        <h3>Vous arbitrez. <em><span class="tool-name-inline">Claude</span> exécute.</em></h3>
+        <p>Pas 50 tâches mal hiérarchisées. Les 2 vraies urgences, formulées dans votre langage.</p>
+      </div>
+
+      <div class="caption" data-step="5" data-msgs='[{"type":"user","text":"Prépare-moi les deux."},{"type":"tool","text":"Outlook_MCP.draft_reply(to=\"Jacques\")"},{"type":"tool","text":"Calendar_MCP.prep_briefing(client=\"Safran\")"},{"type":"tool-result","text":"Brouillon + brief prêts à relire"}]'>
+        <h3>30 secondes pour ce qui prend <em>une demi-journée.</em></h3>
+        <p>Préparé sur la base de votre historique. Vous relisez. Vous êtes prêt.</p>
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+<!-- NEXT STEP -->
+<section class="next-step hidden">
+  <h2>L'étape <em>d'après.</em></h2>
+
+  <ol class="steps-list">
+    <li class="step-item">
+      <span class="step-num">01</span>
+      <div>
+        <h3>Automatiser des <em>tâches récurrentes.</em></h3>
+        <p>Les workflows qui reviennent chaque semaine, exécutés sans vous.</p>
+      </div>
+    </li>
+    <li class="step-item">
+      <span class="step-num">02</span>
+      <div>
+        <h3>Connecter vos outils métier via des <em>MCP custom.</em></h3>
+        <p>Vos applications internes branchées. Logiciels métier inclus.</p>
+      </div>
+    </li>
+    <li class="step-item">
+      <span class="step-num">03</span>
+      <div>
+        <h3>Héberger <span class="tool-name-inline">Claude</span> <em>dans le cloud.</em></h3>
+        <p>Un assistant disponible 24/7, accessible à toute votre équipe.</p>
+      </div>
+    </li>
+    <li class="step-item">
+      <span class="step-num">04</span>
+      <div>
+        <h3>Piloter depuis votre <em>mobile.</em></h3>
+        <p>Workflows déclenchés à la voix ou au texte, où que vous soyez.</p>
+      </div>
+    </li>
+  </ol>
+
+  <blockquote class="closing-quote">
+    Un chatbot était <em>simple</em> à adopter.<br />
+    L'IA d'aujourd'hui, <em class="pink-em">beaucoup moins.</em>
+  </blockquote>
+</section>
+
+<!-- OFFRE + PROOF -->
+<section class="offre">
+  <div class="offre-inner">
+
+    <div class="marquee">
+      <div class="marquee-track">
+        <span class="logo-item">Airbus</span>
+        <span class="logo-item italic">Carrefour</span>
+        <span class="logo-item">France Travail</span>
+        <span class="logo-item italic">Doctolib</span>
+        <span class="logo-item">CompuGroup Medical</span>
+        <span class="logo-item italic">Betclic</span>
+        <span class="logo-item">Prudential</span>
+        <span class="logo-item italic">Manulife</span>
+        <span class="logo-item">DBS</span>
+        <span class="logo-item italic">Eiffage</span>
+        <span class="logo-item">Pierre Fabre</span>
+        <span class="logo-item italic">UBS</span>
+        <span class="logo-item">Le Wagon</span>
+        <span class="logo-item italic">Capgemini</span>
+        <span class="logo-item">Accenture</span>
+        <!-- Duplicate for seamless loop -->
+        <span class="logo-item" aria-hidden="true">Airbus</span>
+        <span class="logo-item italic" aria-hidden="true">Carrefour</span>
+        <span class="logo-item" aria-hidden="true">France Travail</span>
+        <span class="logo-item italic" aria-hidden="true">Doctolib</span>
+        <span class="logo-item" aria-hidden="true">CompuGroup Medical</span>
+        <span class="logo-item italic" aria-hidden="true">Betclic</span>
+        <span class="logo-item" aria-hidden="true">Prudential</span>
+        <span class="logo-item italic" aria-hidden="true">Manulife</span>
+        <span class="logo-item" aria-hidden="true">DBS</span>
+        <span class="logo-item italic" aria-hidden="true">Eiffage</span>
+        <span class="logo-item" aria-hidden="true">Pierre Fabre</span>
+        <span class="logo-item italic" aria-hidden="true">UBS</span>
+        <span class="logo-item" aria-hidden="true">Le Wagon</span>
+        <span class="logo-item italic" aria-hidden="true">Capgemini</span>
+        <span class="logo-item" aria-hidden="true">Accenture</span>
+      </div>
+    </div>
+
+    <h2>Deux formats. <em>Une méthode.</em></h2>
+
+    <div class="offers-grid">
+
+      <article class="offer">
+        <h3>Atelier <em>individuel.</em></h3>
+        <div class="offer-meta">1/2 journée · visio ou présentiel</div>
+        <p class="offer-desc">En une <strong>demi-journée</strong>, vous changez votre manière de travailler en utilisant <span class="tool-name-inline">Claude</span>.</p>
+        <ul class="offer-list">
+          <li>Diagnostic de vos workflows et de votre stack</li>
+          <li><span class="tool-name-inline">Claude</span> installé en hub central</li>
+          <li>Connexion à vos outils : Outlook, Teams, Drive, Jira…</li>
+          <li>Premier workflow automatisé en fin de session</li>
+          <li>Suivi par mail après l'atelier</li>
+        </ul>
+        <div class="offer-price"><span class="price-amount">1 000 €</span><span class="price-unit">forfait</span></div>
+      </article>
+
+      <article class="offer dark">
+        <h3>Atelier <em>d'équipe.</em></h3>
+        <div class="offer-meta">5 jours · équipes & top management</div>
+        <p class="offer-desc">Sur <strong>5 jours</strong>, vous connectez tous vos outils métier et automatisez vos workflows clés. Pour équipes et comités de direction.</p>
+        <ul class="offer-list">
+          <li>Cartographie des workflows critiques de l'équipe</li>
+          <li>Connexion à votre stack complète, MCP custom inclus</li>
+          <li>Automatisations construites collectivement</li>
+          <li>Volet sécurité, RGPD, gouvernance IA</li>
+          <li>Coaching individuel inclus par participant</li>
+        </ul>
+        <div class="offer-price"><span class="price-amount">9 000 €</span><span class="price-unit">forfait</span></div>
+      </article>
+
+    </div>
+
+    <div class="carousel" id="verbatims">
+      <div class="carousel-viewport">
+        <div class="carousel-track">
+
+          <article class="testimonial">
+            <p>C'est un professeur qui fournit des exemples didactiques et nous aide à comprendre les concepts de manière simple et nous apporte son aide.</p>
+            <div class="author">
+              <div class="author-avatar">LW</div>
+              <div class="author-text">
+                <div class="name">Apprenant</div>
+                <div class="meta">Le Wagon · Formation IA générative</div>
+              </div>
+            </div>
+          </article>
+
+          <article class="testimonial">
+            <p>[Verbatim à remplacer] Felix vulgarise sans simplifier. En deux sessions, j'ai compris ce que beaucoup d'experts ne savent pas expliquer : où l'IA délivre vraiment.</p>
+            <div class="author">
+              <div class="author-avatar">JR</div>
+              <div class="author-text">
+                <div class="name">Julien R.</div>
+                <div class="meta">CTO · Entreprise à remplacer</div>
+              </div>
+            </div>
+          </article>
+
+          <article class="testimonial">
+            <p>[Verbatim à remplacer] Pour la première fois de ma carrière, ma todo est devancée. Mes équipes me trouvent plus disponible. La formation la plus rentable que j'aie suivie.</p>
+            <div class="author">
+              <div class="author-avatar">SD</div>
+              <div class="author-text">
+                <div class="name">Sophie D.</div>
+                <div class="meta">COO · Entreprise à remplacer</div>
+              </div>
+            </div>
+          </article>
+
+        </div>
+      </div>
+
+      <div class="carousel-nav">
+        <button class="carousel-arrow" data-dir="-1" aria-label="Précédent">←</button>
+        <div class="carousel-dots">
+          <button class="dot active" data-index="0" aria-label="Slide 1"></button>
+          <button class="dot" data-index="1" aria-label="Slide 2"></button>
+          <button class="dot" data-index="2" aria-label="Slide 3"></button>
+        </div>
+        <button class="carousel-arrow" data-dir="1" aria-label="Suivant">→</button>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- FORMATEUR -->
+<section class="formateur">
+  <h2>Felix <em>Revert.</em></h2>
+
+  <div class="intro-grid">
+
+    <div class="photo">
+      <img src="photo-portrait.png"
+           onerror="this.onerror=null;this.src='https://felixchop.github.io/portfolio/pictures/photo-portrait.png';"
+           alt="Félix Revert" />
+    </div>
+
+    <div class="intro-text">
+      <h3>9 ans à transformer la data en <em>produit utile.</em></h3>
+      <p>Data scientist et product manager. 9 ans à livrer des features IA en production, à piloter des équipes pluridisciplinaires, à enseigner.</p>
+      <p>Témoin direct de la transition <strong>IA prédictive → IA générative.</strong> Construit avec les deux. Connaît leurs limites. Sait où chacun délivre.</p>
+
+      <a class="cv-link" href="https://felixchop.github.io/portfolio" target="_blank" rel="noopener">
+        <span>Mon parcours complet</span>
+        <span class="cv-arrow">→</span>
+      </a>
+    </div>
+
+  </div>
+</section>
+
+<!-- FINAL -->
+<section class="final">
+  <div class="final-inner">
+    <h2>Devancez votre <em>todo.</em><br />Faites <em>10 fois plus</em> avec l'IA.<br />Rendez-vous <em>indispensable.</em></h2>
+
+    <div class="cta-single">
+
+      <a class="cta-card" href="https://cal.com/felixrevert/30min" target="_blank" rel="noopener">
+        <div class="cta-pill">49 € · 30 min</div>
+        <h3>Réservez un <em>call.</em></h3>
+        <p class="cta-sub">Diagnostic de votre situation, identification de l'atelier qui vous correspond, et premières recommandations actionnables. Directement dans mon agenda.</p>
+        <div class="cta-value">
+          <span>Choisir un créneau</span>
+          <span class="arrow">→</span>
+        </div>
+      </a>
+
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="foot-inner">
+    <div>© 2026 Felix Revert</div>
+    <div>
+      <a href="https://github.com/FelixChop" target="_blank">GitHub</a>
+      <a href="https://www.linkedin.com/in/felix-revert-00998852/" target="_blank">LinkedIn</a>
+      <a href="mailto:felixrevert@gmail.com">Mail</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+// ============ Tool picker ============
+const toolPills = document.querySelectorAll('.tool-pill');
+const toolNameInlineEls = document.querySelectorAll('.tool-name-inline');
+const clTitleEl = document.querySelector('.cl-title');
+const clLogoEl = document.querySelector('.cl-logo');
+const clPromptEl = document.getElementById('cl-prompt');
+const demoSection = document.getElementById('demo');
+
+toolPills.forEach(pill => {
+  pill.addEventListener('click', () => {
+    toolPills.forEach(p => p.classList.remove('active'));
+    pill.classList.add('active');
+    const name = pill.dataset.tool;
+    const letter = pill.dataset.letter;
+    // Update every inline tool name reference (h2 + captions)
+    toolNameInlineEls.forEach(el => el.textContent = name);
+    // Update box header — only the text node, preserve the cl-sub span
+    if (clTitleEl.firstChild) clTitleEl.firstChild.textContent = name;
+    // Update logo letter
+    clLogoEl.textContent = letter;
+    // Update input prompt placeholder
+    clPromptEl.textContent = `Demande à ${name}…`;
+
+    // Reveal demo + next-step sections (if hidden) then smooth-scroll to demo
+    const wasHidden = demoSection.classList.contains('hidden');
+    if (wasHidden) {
+      demoSection.classList.remove('hidden');
+      document.querySelector('.next-step')?.classList.remove('hidden');
+    }
+    requestAnimationFrame(() => {
+      demoSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+});
+
+// ============ Scroll-driven Claude conversation ============
+const clBody = document.getElementById('cl-body');
+const captions = document.querySelectorAll('.caption');
+
+function unescape(s) { return s.replace(/\|/g, "'"); }
+
+const stepData = Array.from(captions).map(el => {
+  try {
+    const raw = JSON.parse(el.dataset.msgs);
+    return raw.map(m => ({ ...m, text: unescape(m.text) }));
+  } catch (e) {
+    console.error('Bad msgs', e);
+    return [];
+  }
+});
+
+function formatToolText(text) {
+  const m = text.match(/^([\w_]+)\.([\w_]+)\((.*)\)$/);
+  if (m) {
+    return `<span class="fn">${m[1]}.${m[2]}</span>(<span class="arg">${escapeHtml(m[3])}</span>)`;
+  }
+  return escapeHtml(text);
+}
+function escapeHtml(s) {
+  return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+
+let currentRenderedStep = -1;
+
+function renderUpToStep(step) {
+  if (step === currentRenderedStep) return;
+  currentRenderedStep = step;
+  clBody.innerHTML = '';
+  for (let i = 0; i <= step; i++) {
+    const msgs = stepData[i] || [];
+    msgs.forEach((m, idx) => {
+      const el = document.createElement('div');
+      el.className = 'msg ' + m.type;
+      if (m.type === 'tool') {
+        el.innerHTML = formatToolText(m.text);
+      } else {
+        el.textContent = m.text;
+      }
+      if (i === step) {
+        setTimeout(() => el.classList.add('visible'), 30 + idx * 90);
+      } else {
+        el.classList.add('visible');
+      }
+      clBody.appendChild(el);
+    });
+  }
+  requestAnimationFrame(() => { clBody.scrollTop = clBody.scrollHeight; });
+}
+
+renderUpToStep(0);
+captions[0].classList.add('active');
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting && entry.intersectionRatio > 0.45) {
+      const step = parseInt(entry.target.dataset.step);
+      captions.forEach(c => c.classList.toggle('active', parseInt(c.dataset.step) === step));
+      renderUpToStep(step);
+    }
+  });
+}, { threshold: [0.45] });
+
+captions.forEach(c => observer.observe(c));
+
+// ============ Testimonials carousel ============
+(function () {
+  const track = document.querySelector('.carousel-track');
+  if (!track) return;
+  const dots = document.querySelectorAll('.dot');
+  const arrows = document.querySelectorAll('.carousel-arrow');
+  const total = track.children.length;
+  let current = 0;
+
+  function goTo(index) {
+    current = (index + total) % total;
+    track.style.transform = `translateX(-${current * 100}%)`;
+    dots.forEach((d, i) => d.classList.toggle('active', i === current));
+  }
+
+  arrows.forEach(arrow => {
+    arrow.addEventListener('click', () => goTo(current + parseInt(arrow.dataset.dir)));
+  });
+  dots.forEach(dot => {
+    dot.addEventListener('click', () => goTo(parseInt(dot.dataset.index)));
+  });
+})();
+</script>
+
+</body>
+</html>
