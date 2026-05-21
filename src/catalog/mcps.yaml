@@ -1,0 +1,65 @@
+gmail:
+  name: "Gmail"
+  package: "@modelcontextprotocol/server-gmail"
+  install_url: "https://github.com/modelcontextprotocol/servers/tree/main/src/gmail"
+  alternatives:
+    - name: "Gmail community MCP (gongrzhe)"
+      url: "https://github.com/GongRzhe/Gmail-MCP-Server"
+  required_for: [bootstrap, todo_generation, execution]
+
+outlook:
+  name: "Microsoft Outlook"
+  package: "@modelcontextprotocol/server-outlook"
+  install_url: "https://github.com/modelcontextprotocol/servers"
+  alternatives:
+    - name: "Outlook community MCP (RyanCardin15)"
+      url: "https://github.com/RyanCardin15/outlook-mcp"
+  required_for: [bootstrap, todo_generation, execution]
+
+teams:
+  name: "Microsoft Teams"
+  package: "@modelcontextprotocol/server-teams"
+  install_url: "https://github.com/modelcontextprotocol/servers"
+  alternatives:
+    - name: "Microsoft 365 MCP (InditexTech)"
+      url: "https://github.com/InditexTech/mcp-teams-server"
+  required_for: [bootstrap, todo_generation, execution]
+
+slack:
+  name: "Slack"
+  package: "@modelcontextprotocol/server-slack"
+  install_url: "https://github.com/modelcontextprotocol/servers/tree/main/src/slack"
+  alternatives: []
+  required_for: [bootstrap, todo_generation, execution]
+
+drive:
+  name: "Google Drive"
+  package: "@modelcontextprotocol/server-gdrive"
+  install_url: "https://github.com/modelcontextprotocol/servers/tree/main/src/gdrive"
+  alternatives: []
+  required_for: [todo_generation]
+
+calendar:
+  name: "Google Calendar"
+  package: "@modelcontextprotocol/server-gcal"
+  install_url: "https://github.com/modelcontextprotocol/servers"
+  alternatives:
+    - name: "google-calendar-mcp (taylorwilsdon)"
+      url: "https://github.com/taylorwilsdon/google-calendar-mcp"
+  required_for: [bootstrap, todo_generation]
+
+notion:
+  name: "Notion"
+  package: "@notionhq/notion-mcp-server"
+  install_url: "https://github.com/makenotion/notion-mcp-server"
+  alternatives: []
+  required_for: [todo_generation]
+
+confluence:
+  name: "Confluence"
+  package: "@modelcontextprotocol/server-confluence"
+  install_url: "https://github.com/modelcontextprotocol/servers"
+  alternatives:
+    - name: "Atlassian MCP (sooperset)"
+      url: "https://github.com/sooperset/mcp-atlassian"
+  required_for: [todo_generation]
