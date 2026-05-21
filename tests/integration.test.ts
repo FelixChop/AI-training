@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { bootstrapTool, completeBootstrap, statusTool } from '../src/tools/bootstrap.js';
 import { listReferencesTool, suggestReferenceUpdateTool } from '../src/tools/references.js';
+import { getScanPlanTool, resumeBootstrapTool, updateScanProgressTool } from '../src/tools/scan.js';
 import {
   claimItemTool,
   getCurrentTodoTool,
@@ -117,5 +118,45 @@ describe('integration — full bootstrap flow', () => {
     expect(finalStatus.references.stakeholders_count).toBe(1);
     expect(finalStatus.references.projects_count).toBe(1);
     expect(finalStatus.references.has_style_guide).toBe(true);
+  });
+});
+
+describe('integration — resumable bootstrap with scan plan', () => {
+  useFreshFocusHome();
+
+  it('survives an interrupted scan and resumes from the right phase', () => {
+    // 1. Start bootstrap and load the structured plan.
+    bootstrapTool({ scan_depth_months: 1 });
+    const plan = getScanPlanTool({ scan_depth_months: 1 });
+    expect(plan.phases).toHaveLength(7);
+
+    // 2. Simulate work on the first 3 phases (with batched progress).
+    updateScanProgressTool({ phase_id: 'p1', items_processed_delta: 100 });
+    updateScanProgressTool({ phase_id: 'p1', items_processed_delta: 80, mark_complete: true });
+    updateScanProgressTool({ phase_id: 'p2', items_processed_delta: 150, mark_complete: true });
+    updateScanProgressTool({ phase_id: 'p3', items_processed_delta: 12, mark_complete: true });
+
+    // 3. Simulate a crash: a brand new session calls resume_bootstrap first.
+    const resume = resumeBootstrapTool({});
+    expect(resume.status).toBe('resume');
+    if (resume.status === 'resume') {
+      expect(resume.completed_phase_ids).toEqual(['p1', 'p2', 'p3']);
+      expect(resume.items_processed).toBe(342);
+      expect(resume.current_phase?.id).toBe('p4');
+    }
+
+    // 4. Resume through the remaining phases in order.
+    updateScanProgressTool({ phase_id: 'p4', mark_complete: true });
+    updateScanProgressTool({ phase_id: 'p5', mark_complete: true });
+    updateScanProgressTool({ phase_id: 'p6', mark_complete: true });
+    const last = updateScanProgressTool({ phase_id: 'p7', mark_complete: true });
+
+    // 5. Bootstrap auto-completes when the last phase is done.
+    expect(last.bootstrap_completed).toBe(true);
+    expect(last.next_phase).toBeNull();
+    const finalStatus = statusTool();
+    expect(finalStatus.bootstrap_status).toBe('complete');
+    expect(finalStatus.scan_progress?.completed_phase_count).toBe(7);
+    expect(finalStatus.scan_progress?.progress_percent).toBe(100);
   });
 });

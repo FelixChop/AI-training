@@ -9,13 +9,21 @@ côté outil IA hôte ; focus ne fait que la plomberie.
 
 ### Nouveau
 - Serveur MCP `npx @felixchop/focus` en transport stdio.
-- 12 tools exposés : `status`, `bootstrap`, `list_references`,
+- 15 tools exposés : `status`, `bootstrap`, `get_scan_plan`,
+  `update_scan_progress`, `resume_bootstrap`, `list_references`,
   `read_reference`, `suggest_reference_update`, `save_todo`,
   `get_current_todo`, `claim_item`, `release_item`, `mark_action_status`,
   `recommend_mcps`, `check_for_updates`.
+- **Bootstrap résumable et plan de scan structuré.** Le bootstrap est
+  désormais découpé en 7 phases canoniques que l'outil IA hôte exécute
+  une à une, en rapportant sa progression à focus après chaque batch. Si
+  la session est interrompue, `resume_bootstrap` renvoie où Claude s'était
+  arrêté. La complétion du bootstrap est automatique quand la dernière
+  phase est marquée.
 - Stockage SQLite (`better-sqlite3`) + knowledge base en `.md` avec
   frontmatter YAML, le tout dans `~/.focus/`.
-- Système de migrations versionnées (v1 = schéma initial).
+- Système de migrations versionnées (v1 = schéma initial, v2 = clé
+  `scan_progress_json` dans `meta`).
 - Cascade automatique de déblocage d'actions quand une dépendance passe
   `done`.
 - Lock multi-conversation atomique avec TTL.

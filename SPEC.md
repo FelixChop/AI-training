@@ -18,7 +18,7 @@ focus ne contient **aucune intelligence** au sens LLM. Toute la cognition vient 
 
 1. **Full local.** Aucune donnée utilisateur ne quitte sa machine. Pas de SaaS, pas de cloud, pas de télémétrie. Seul appel sortant autorisé : vérification de version vers GitHub Releases.
 2. **Agnostique au modèle.** focus n'appelle jamais d'API LLM directement. Il est invoqué par l'outil IA de l'utilisateur via le protocole MCP.
-3. **Minimaliste en surface.** ~12 tools MCP, pas plus. Toute fonctionnalité qui peut être déléguée à l'outil IA hôte doit l'être.
+3. **Minimaliste en surface.** 15 tools MCP. Toute fonctionnalité qui peut être déléguée à l'outil IA hôte doit l'être.
 4. **Toujours validable.** Aucune action externe (envoi de mail, message Teams) n'est exécutée sans validation explicite de l'utilisateur. focus ne fait que **proposer** et **persister le statut**.
 5. **Évolutif silencieusement.** La knowledge base s'enrichit au fil des interactions, sans demander à l'utilisateur de remplir des formulaires.
 6. **Distribution npm.** Installation via `npx @felixchop/focus`. Aucune dépendance Python, Docker ou autre.
@@ -193,14 +193,15 @@ Frontmatter YAML + corps markdown libre. Le frontmatter est minimal, le corps es
 
 -----
 
-## 6. Tools MCP exposés (12)
+## 6. Tools MCP exposés (15)
 
 Tous les tools retournent du JSON. En cas d'erreur : throw avec message en langage naturel + code structuré.
 
 ### 6.1 `bootstrap`
 - **Input** : `{ scan_depth_months: number }` (défaut 1, max 24, -1 pour all)
-- Écrit `meta.bootstrap_status = 'in_progress'`, retourne `{ status, instructions_path, available_mcps_detected, recommended_steps }`.
-- Le scan est délégué à l'outil IA hôte.
+- Écrit `meta.bootstrap_status = 'in_progress'` (si pas déjà), retourne `{ status: 'started', instructions, available_mcps_detected, recommended_steps, scan_plan_tool: 'get_scan_plan' }`.
+- **Idempotent** : si un plan de scan est déjà en cours, retourne `{ status: 'resume', current_phase, completed_phase_ids, items_processed, progress_percent, instructions }` au lieu de redémarrer.
+- Le scan est délégué à l'outil IA hôte. focus ne fait que fournir les instructions et tracker la progression via `update_scan_progress`.
 
 ### 6.2 `status`
 - Retourne `bootstrap_status`, `last_bootstrap_at`, `todo_items_count`, comptages de références, `version`, `meta_path`.
@@ -246,6 +247,25 @@ Tous les tools retournent du JSON. En cas d'erreur : throw avec message en langa
 - Appel GET `https://api.github.com/repos/felixchop/focus/releases/latest`. Timeout 5s. Cache 1h dans `meta`.
 - En erreur : retourne `{ update_available: false, latest_version: null }` silencieusement.
 
+### 6.13 `get_scan_plan`
+- **Input** : `{ scan_depth_months: number }` (même validation que `bootstrap`).
+- Retourne un plan structuré en 7 phases canoniques (`p1` sent_emails_scan → `p7` initial_todo_generation). Chaque phase a `id`, `name`, `tool_hint`, `params_hint`, `goal`, `expected_outputs`, `batch_size_hint`, `depends_on`.
+- **Idempotent** : si un plan est déjà persisté dans `meta.scan_progress_json`, retourne le même plan avec `resumed: true` (le `scan_depth_months` du plan initial est préservé même si l'input diffère).
+- Premier appel : persiste le plan + `current_phase_id` initial dans `meta`.
+
+### 6.14 `update_scan_progress`
+- **Input** : `{ phase_id: string, items_processed_delta?: number, mark_complete?: boolean }`.
+- Incrémente `items_processed` ; si `mark_complete: true`, ajoute la phase à `completed_phase_ids` et avance `current_phase_id` vers la prochaine phase dont les `depends_on` sont satisfaites.
+- Retourne `{ updated: true, current_phase_id, next_phase, items_processed, progress_percent, bootstrap_completed }`.
+- **Effet de bord** : si la dernière phase est marquée complète, `bootstrap_status` passe automatiquement à `complete` et `last_bootstrap_at` est stampé.
+- Throw `NOT_FOUND` si aucun plan n'est en cours, `INVALID_INPUT` si `phase_id` n'est pas dans le plan courant.
+
+### 6.15 `resume_bootstrap`
+- **Input** : `{}` (vide).
+- **Read-only** : ne modifie pas l'état.
+- Retourne `{ status: 'no_resume_needed' }` si aucun plan n'est en cours, sinon `{ status: 'resume', plan_id, scan_depth_months, current_phase, completed_phase_ids, items_processed, progress_percent, instructions }`.
+- À appeler **en début de session** pour reprendre un bootstrap interrompu.
+
 -----
 
 ## 7. Flux d'utilisation
@@ -254,9 +274,13 @@ Tous les tools retournent du JSON. En cas d'erreur : throw avec message en langa
 1. User ajoute focus à son outil IA via la doc.
 2. Outil IA appelle `status()`.
 3. Si `not_started`, propose le bootstrap → `bootstrap({ scan_depth_months: 1 })`.
-4. focus retourne les instructions, l'outil IA fait le scan en autonomie.
-5. Plusieurs `suggest_reference_update` puis `save_todo`.
-6. Outil IA marque `bootstrap_status: 'complete'`.
+4. focus retourne les instructions + pointe vers `get_scan_plan`.
+5. Outil IA appelle `get_scan_plan({ scan_depth_months })` pour récupérer les 7 phases.
+6. Pour chaque phase : exécute le `tool_hint` par batches, appelle `update_scan_progress` après chaque batch, et `update_scan_progress({ mark_complete: true })` à la fin de la phase.
+7. Plusieurs `suggest_reference_update` au fil des phases (stakeholders, projects, style_guide, orgchart) puis `save_todo` en phase `p7`.
+8. `bootstrap_status` passe à `complete` automatiquement quand la dernière phase est marquée.
+
+**Si interruption** : la prochaine session appelle `resume_bootstrap()` en premier pour récupérer la phase courante et reprendre où Claude s'était arrêté. Réappel de `bootstrap` ou `get_scan_plan` retourne aussi des données de resume.
 
 ### 7.2 Usage quotidien — "fais ma todo"
 1. `get_current_todo()`.
@@ -346,8 +370,9 @@ Unitaires : `db`, `locks`, `tools`, `merge`, `cascade`. Intégration : 1 scénar
 ## 14. Critères d'acceptation v1
 
 - [ ] `npx @felixchop/focus` lance le serveur sans erreur.
-- [ ] 12 tools exposés.
+- [ ] 15 tools exposés.
 - [ ] User suit le quickstart README et arrive à une première todo en < 30 min.
+- [ ] Bootstrap profond résiste à une interruption et reprend via `resume_bootstrap`.
 - [ ] Tests verts en CI.
 - [ ] README + CHANGELOG rédigés.
 - [ ] Catalogue inclut gmail, outlook, teams, slack, drive, calendar, notion.

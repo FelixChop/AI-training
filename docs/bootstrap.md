@@ -14,16 +14,32 @@ etc.).
 ## How it goes
 
 1. You: *"Bootstrap focus for the last month."*
-2. focus: returns instructions + recommended steps, sets state to
-   `in_progress`.
-3. Your AI tool: pulls sent + received emails, builds stakeholder cards,
-   captures 20-30 of your own messages for the style guide, clusters
-   threads into projects, drafts the first todo.
-4. Each card is persisted via `suggest_reference_update`. During bootstrap,
-   focus accepts writes directly (no `.pending.md` step).
-5. The first todo is persisted via `save_todo`.
-6. Your AI presents the result to you for review.
-7. You confirm, focus marks `bootstrap_status: complete`.
+2. focus: returns instructions + points the AI to `get_scan_plan`, sets
+   state to `in_progress`.
+3. Your AI tool calls `get_scan_plan(1)` and receives a 7-phase plan:
+   - `p1` sent emails scan
+   - `p2` received emails scan
+   - `p3` stakeholder extraction
+   - `p4` style guide build
+   - `p5` project clustering
+   - `p6` org chart build
+   - `p7` initial todo generation
+4. For each phase, the AI calls the suggested business MCP (gmail,
+   outlook…) in batches, reports `update_scan_progress` after each batch,
+   and marks the phase complete when done.
+5. Cards are persisted along the way via `suggest_reference_update`.
+   During bootstrap, focus accepts writes directly (no `.pending.md` step).
+6. The first todo is persisted in `p7` via `save_todo`.
+7. When the last phase is marked complete, focus auto-sets
+   `bootstrap_status: complete` and stamps `last_bootstrap_at`.
+
+### If the session is interrupted
+
+Deep scans (12+ months, thousands of messages) can saturate your AI's
+context window and fail mid-flight. Not a problem: open a new conversation
+and your AI calls `resume_bootstrap()` first. focus returns the current
+phase, what's been done, and a short briefing. The scan resumes where it
+stopped.
 
 ## How long does it take?
 

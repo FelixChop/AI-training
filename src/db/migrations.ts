@@ -15,6 +15,14 @@ const MIGRATIONS: Migration[] = [
       createInitialSchema(db);
     },
   },
+  {
+    version: 2,
+    // v2 adds the scan_progress_json meta key used by get_scan_plan /
+    // update_scan_progress / resume_bootstrap. No table change needed — the
+    // value lives in the existing meta k/v store. This migration only bumps
+    // the schema_version so older installs know about the new key.
+    up: () => {},
+  },
 ];
 
 export function runMigrations(db: Database.Database): void {

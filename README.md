@@ -45,7 +45,7 @@ depending on `scan_depth_months`.
 - `~/.focus/reference/` — plain-markdown cards for stakeholders, projects,
   your writing style, your objectives, and your org chart. You can read
   and edit these files directly with any editor.
-- 12 MCP tools your AI tool can call to enrich and act on these.
+- 15 MCP tools your AI tool can call to enrich and act on these.
 
 ---
 
@@ -81,12 +81,15 @@ Call `recommend_mcps` from your AI tool to get the up-to-date install URLs.
 
 ---
 
-## The 12 tools
+## The 15 tools
 
 | Tool | What it does |
 |---|---|
-| `status` | Returns bootstrap state, todo count, KB summary, version |
-| `bootstrap` | Kicks off the initial scan — returns instructions for your AI |
+| `status` | Returns bootstrap state, todo count, KB summary, scan progress, version |
+| `bootstrap` | Kicks off the initial scan — idempotent (returns resume data if already in progress) |
+| `get_scan_plan` | Returns the 7-phase structured scan plan for the host AI to execute |
+| `update_scan_progress` | Reports batch progress and phase completion; auto-completes bootstrap on the last phase |
+| `resume_bootstrap` | Read-only — returns where to resume after an interruption |
 | `list_references` | Lists `.md` cards in `~/.focus/reference/` |
 | `read_reference` | Reads a card with frontmatter + body |
 | `suggest_reference_update` | Proposes a write to a card (applied during bootstrap, pending otherwise) |

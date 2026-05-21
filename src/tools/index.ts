@@ -21,6 +21,17 @@ import {
   suggestReferenceUpdateTool,
 } from './references.js';
 import {
+  type GetScanPlanInput,
+  type ResumeBootstrapInput,
+  type UpdateScanProgressInput,
+  getScanPlanSchema,
+  getScanPlanTool,
+  resumeBootstrapSchema,
+  resumeBootstrapTool,
+  updateScanProgressSchema,
+  updateScanProgressTool,
+} from './scan.js';
+import {
   type ClaimItemInput,
   type GetCurrentTodoInput,
   type MarkActionStatusInput,
@@ -73,9 +84,30 @@ export const TOOLS: ToolDefinition<unknown, unknown>[] = [
   {
     name: 'bootstrap',
     description:
-      'Start the initial knowledge-base scan. Returns instructions for the host AI to follow. The host AI orchestrates the actual scan.',
+      'Start the initial knowledge-base scan. Returns instructions for the host AI to follow, or resume data if a scan is already in progress. Idempotent.',
     inputSchema: bootstrapInputSchema,
     handler: (input) => bootstrapTool(input as BootstrapInput) as unknown,
+  },
+  {
+    name: 'get_scan_plan',
+    description:
+      'Return the 7-phase scan plan parameterised for the requested scan depth. Idempotent: subsequent calls return the same plan while a bootstrap is in progress.',
+    inputSchema: getScanPlanSchema,
+    handler: (input) => getScanPlanTool(input as GetScanPlanInput) as unknown,
+  },
+  {
+    name: 'update_scan_progress',
+    description:
+      'Report scan progress for a phase. Increments items_processed and, on mark_complete, advances current_phase_id. Auto-marks bootstrap complete when the last phase finishes.',
+    inputSchema: updateScanProgressSchema,
+    handler: (input) => updateScanProgressTool(input as UpdateScanProgressInput) as unknown,
+  },
+  {
+    name: 'resume_bootstrap',
+    description:
+      'Read-only. Return where the scan plan left off so the next session can resume. Use this first after any interruption.',
+    inputSchema: resumeBootstrapSchema,
+    handler: (input) => resumeBootstrapTool(input as ResumeBootstrapInput) as unknown,
   },
   {
     name: 'list_references',

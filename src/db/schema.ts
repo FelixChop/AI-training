@@ -1,6 +1,6 @@
 import type Database from 'better-sqlite3';
 
-export const CURRENT_SCHEMA_VERSION = 1;
+export const CURRENT_SCHEMA_VERSION = 2;
 
 const CREATE_TODO_ITEMS = `
 CREATE TABLE IF NOT EXISTS todo_items (
